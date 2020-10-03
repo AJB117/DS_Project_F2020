@@ -3456,7 +3456,7 @@ year,state,state_po,state_fips,state_cen,state_ic,office,district,stage,runoff,s
 1980,Oregon,OR,41,92,72,US House,4,gen,FALSE,FALSE,Jim Weaver,democrat,FALSE,total,158745,289634,FALSE,20200424
 1980,Oregon,OR,41,92,72,US House,4,gen,FALSE,FALSE,NA,NA,TRUE,total,28,289634,FALSE,20200424
 1980,Oregon,OR,41,92,72,US House,4,gen,FALSE,FALSE,Michael Fitzgerald,republican,FALSE,total,130861,289634,FALSE,20200424
-1980,Pennsylvania,PA,42,23,14,US House,1,gen,FALSE,FALSE,Thomas M. Foglietta,foglietta (democrat),FALSE,total,58737,155451,FALSE,20200424
+1980,Pennsylvania,PA,42,23,14,US House,1,gen,FALSE,FALSE,Thomas M. Foglietta,democrat,FALSE,total,58737,155451,FALSE,20200424
 1980,Pennsylvania,PA,42,23,14,US House,1,gen,FALSE,FALSE,Michael Myers,democrat,FALSE,total,52956,155451,FALSE,20200424
 1980,Pennsylvania,PA,42,23,14,US House,1,gen,FALSE,FALSE,Geoffrey Steinberg,libertarian,FALSE,total,3161,155451,FALSE,20200424
 1980,Pennsylvania,PA,42,23,14,US House,1,gen,FALSE,FALSE,Shaheed Abdul Haqq,citizens,FALSE,total,2704,155451,FALSE,20200424
