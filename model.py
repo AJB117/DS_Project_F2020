@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn import tree
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn import metrics
 
@@ -32,7 +33,12 @@ X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
 clf = tree.DecisionTreeClassifier()
 clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
-print(f"Accuracy: {metrics.accuracy_score(y_test, y_pred)}")
 
-cols = list(x.columns)
-print(cols)
+clf_knn = KNeighborsClassifier()
+clf_knn.fit(X_train, y_train)
+
+print(f"Tree Accuracy: {metrics.accuracy_score(y_test, y_pred)}")
+print(f"KNN Accuracy: {metrics.accuracy_score(y_test, clf_knn.predict(X_test))}")
+
+# cols = list(x.columns)
+# print(cols)
