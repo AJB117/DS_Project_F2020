@@ -4,16 +4,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-features_df = pd.read_csv('./data/integrated_features.csv', sep=",", engine="python")
+# features_df = pd.read_csv('./data/integrated_features.csv', sep=",", engine="python")
+features_df = pd.read_csv('./data/flipped_label_data/concat_demographic_features.csv', sep=",", engine="python")
 print(features_df)
 
-labels_df = pd.read_csv('./data/integrated_labels.csv', sep=",", engine="python")
+# labels_df = pd.read_csv('./data/integrated_labels.csv', sep=",", engine="python")
+labels_df = pd.read_csv('./previous_years.csv', sep=",", engine="python")
 print(labels_df)
 
 mergedDf = features_df.merge(labels_df, left_on='ID', right_on='ID')
 print(mergedDf)
 
-mergedDf.to_csv('./data/integrated_features_and_labels.csv', index=False)
+mergedDf = mergedDf.drop(['year', 'state', 'state_po', 'Unnamed: 0'], axis=1)
+mergedDf.to_csv('./data/flipped_label_data/integrated_features_and_labels.csv', index=False)
 
 # join by headers
 '''cols_dict = dict((header, []) for header in headers)

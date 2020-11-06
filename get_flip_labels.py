@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +5,7 @@ import math
 
 
 
-df = pd.read_csv('integrated.csv', sep=",", engine="python")
+df = pd.read_csv('./data/integrated.csv', sep=",", engine="python")
 print(df)
 
 # get columns year, state_po, district
