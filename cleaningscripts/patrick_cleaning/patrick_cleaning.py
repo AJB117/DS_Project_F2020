@@ -52,8 +52,8 @@ def get_slope(from_year, to_year, column, data):
 data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_labels.csv', sep=",", engine="python")
 # data = pd.read_csv('./cleaningscripts/testing.csv', sep=",", engine="python")
 # removal of columns we just don't have enough data on
-# data = data.drop(['FIPSTATE', 'REDIST', 'FINANCE', 'FEDWRKR', 'LOCLWRKR', 'STATWRKR', 'EMPLYD', 'URBNFARM'], axis=1)
 
+data = data.drop(['FIPSTATE', 'REDIST', 'FINANCE', 'FEDWRKR', 'LOCLWRKR', 'STATWRKR', 'EMPLYD', 'URBNFARM'], axis=1)
 data["NUCPLANT"] = data["NUCPLANT"].fillna(0)
 data["PORT"] = data["PORT"].fillna(0)
 
