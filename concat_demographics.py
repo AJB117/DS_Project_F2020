@@ -12,6 +12,8 @@ def renamer(x):
 start_year = 78
 all_years = pd.DataFrame()
 ids = []
+states = []
+years = []
 for year in range(start_year, 100, 2):
   df = pd.read_csv(f'./data/congressional_demographic_data/fin{year}.csv', sep=",", engine="python")
   df.columns = map(renamer, df.columns)
