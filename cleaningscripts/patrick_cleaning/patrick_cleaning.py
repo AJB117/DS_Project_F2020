@@ -53,10 +53,19 @@ data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_la
 # data = pd.read_csv('./cleaningscripts/testing.csv', sep=",", engine="python")
 # removal of columns we just don't have enough data on
 
-data = data.drop(['FIPSTATE', 'REDIST', 'FINANCE', 'FEDWRKR', 'LOCLWRKR', 'STATWRKR', 'EMPLYD', 'URBNFARM'], axis=1)
-data["NUCPLANT"] = data["NUCPLANT"].fillna(0)
-data["PORT"] = data["PORT"].fillna(0)
+# data = data.drop(['FIPSTATE', 'REDIST', 'FINANCE', 'FEDWRKR', 'LOCLWRKR', 'STATWRKR', 'EMPLYD', 'URBNFARM'], axis=1)
+# data["NUCPLANT"] = data["NUCPLANT"].fillna(0)
+# data["PORT"] = data["PORT"].fillna(0)
+
+years = ['1978', '1980', '1982']
+
+print(data[data['YEAR'] == '1984'])
+
+for year in years:
+  for state in states:
+    # df = data.loc[(data['YEAR'] == year) & (data['STATE'] == state)]
+    acreigo_mean_84 = data[(data['YEAR'] == '1984') & (data['STATE'] == state)]
+    # print(acreigo_mean_84)
 
 
-
-data.to_csv('./cleaningscripts/patrick_cleaning/patricktesting.csv')
+# data.to_csv('./cleaningscripts/patrick_cleaning/patricktesting.csv')
