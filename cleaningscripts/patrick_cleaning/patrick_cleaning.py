@@ -57,15 +57,21 @@ data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_la
 # data["NUCPLANT"] = data["NUCPLANT"].fillna(0)
 # data["PORT"] = data["PORT"].fillna(0)
 
-years = ['1978', '1980', '1982']
 
-print(data[data['YEAR'] == '1984'])
+def replace_with_mean(column):
+  years = [1978, 1980, 1982]
+  to_replace_with = []
+  for year in years:
+    for state in states:
+      df = data.loc[(data['YEAR'] == year) & (data['STATE'] == state)]
+      mean_84 = data[(data['YEAR'] == 1984) & (data['STATE'] == state)][column]
+      if len(mean_84.values) > 0:
+        df[column] = [mean(mean_84.values)] * len(df)
+        print(df[column])
+        data.loc[(data['YEAR'] == year) & (data['STATE'] == state)] = df
+  data.to_csv('./testing.csv')
 
-for year in years:
-  for state in states:
-    # df = data.loc[(data['YEAR'] == year) & (data['STATE'] == state)]
-    acreigo_mean_84 = data[(data['YEAR'] == '1984') & (data['STATE'] == state)]
-    # print(acreigo_mean_84)
+replace_with_mean('ACEREGIO')
 
 
 # data.to_csv('./cleaningscripts/patrick_cleaning/patricktesting.csv')
