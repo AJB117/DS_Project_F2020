@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from statistics import mean
+from sklearn import preprocessing
 
 states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
           "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
@@ -49,7 +50,8 @@ def get_slope(from_year, to_year, column, data):
   # from_mean = mean(from_data)
   # print((to_mean - from_mean)/dist)
 
-data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_labels.csv', sep=",", engine="python")
+# data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_labels.csv', sep=",", engine="python")
+data = pd.read_csv('./data/flipped_label_data/cleaned_flipped_integrated_features_and_labels.csv', sep=",", engine="python")
 # data = pd.read_csv('./cleaningscripts/testing.csv', sep=",", engine="python")
 # removal of columns we just don't have enough data on
 
@@ -71,7 +73,31 @@ def replace_with_mean(column):
         data.loc[(data['YEAR'] == year) & (data['STATE'] == state)] = df
   data.to_csv('./testing.csv')
 
-replace_with_mean('ACEREGIO')
+# data = data.drop(['VETERANS', 'MARINE', 'WHLSALE'], axis=1)
+# data = data.fillna(0)
+# data.to_csv('./testing.csv')
 
+to_standardize = ['CONSTRCT', 'UNION', 'MDNINCM', 'candidatevotes', 'totalvotes', 'winratio', 'prev_winratio', 'prev_candidatevotes', 'prev_totalvotes']
+to_normalize_and_divide_by_population = ['BLACK', 'BLUCLLR', 'ENROLL', 'FARMER', 'FORBORN', 'GVTWRKR', 'MANUF', 'RURLFARM', 'MILTPOP', 'TRANSPRT', 'UNEMPLYD',
+                            'URBAN', 'WHLRETL', 'AGE65', 'CVLLBFRC']
+to_normalize = ['VABEDS', 'BANK', 'FLOOD', 'MILTMAJR', 'MILTINST', 'PORT']
 
-# data.to_csv('./cleaningscripts/patrick_cleaning/patricktesting.csv')
+standardize_second = ['BLUCLLR', 'ENROLL', 'GVTWRKR', 'MANUF', 'TRANSPRT', 'URBAN', 'AGE65', 'WHLRETL', 'CVLLBFRC']
+normalize_second = ['BLACK', 'FARMER', 'FORBORN', 'RURLFARM', 'MILTPOP', 'UNEMPLYD', 'INTRLAND']
+# data = data.drop(['NUCPLANT'], axis=1)
+min_max_scaler = preprocessing.MinMaxScaler()
+standard_scaler = preprocessing.StandardScaler()
+
+data[to_standardize] = standard_scaler.fit_transform(data[to_standardize])
+data[to_normalize] = min_max_scaler.fit_transform(data[to_normalize])
+
+for feature in to_normalize_and_divide_by_population:
+  data[feature] = data[feature]/data['POPULATN']
+
+data[standardize_second] = standard_scaler.fit_transform(data[standardize_second])
+data[normalize_second] = min_max_scaler.fit_transform(data[normalize_second])
+
+data[['POPSQMI']] = standard_scaler.fit_transform(data[['POPSQMI']])
+data[['POPULATN']] = min_max_scaler.fit_transform(data[['POPULATN']])
+
+data.to_csv('./testing.csv')
