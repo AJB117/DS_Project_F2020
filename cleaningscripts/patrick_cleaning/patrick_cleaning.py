@@ -51,7 +51,8 @@ def get_slope(from_year, to_year, column, data):
   # print((to_mean - from_mean)/dist)
 
 # data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_labels.csv', sep=",", engine="python")
-data = pd.read_csv('./data/flipped_label_data/cleaned_flipped_integrated_features_and_labels.csv', sep=",", engine="python")
+# data = pd.read_csv('./data/flipped_label_data/cleaned_flipped_integrated_features_and_labels.csv', sep=",", engine="python")
+data = pd.read_csv('./data/flipped_label_data/flipped_integrated_features_and_labels_fixed.csv', sep=",", engine="python")
 # data = pd.read_csv('./cleaningscripts/testing.csv', sep=",", engine="python")
 # removal of columns we just don't have enough data on
 
@@ -77,13 +78,16 @@ def replace_with_mean(column):
 # data = data.fillna(0)
 # data.to_csv('./testing.csv')
 
-to_standardize = ['CONSTRCT', 'UNION', 'MDNINCM', 'candidatevotes', 'totalvotes', 'winratio', 'prev_winratio', 'prev_candidatevotes', 'prev_totalvotes']
-to_normalize_and_divide_by_population = ['BLACK', 'BLUCLLR', 'ENROLL', 'FARMER', 'FORBORN', 'GVTWRKR', 'MANUF', 'RURLFARM', 'MILTPOP', 'TRANSPRT', 'UNEMPLYD',
+data = data.drop(['YEAR'], axis=1)
+data['NUCPLANT'] = data['NUCPLANT'].fillna(0)
+
+to_standardize = ['LOCLWRKR', 'CONSTRCT', 'UNION', 'MDNINCM', 'candidatevotes', 'totalvotes', 'winratio', 'prev_winratio', 'prev_candidatevotes', 'prev_totalvotes']
+to_normalize_and_divide_by_population = ['VETERANS', 'STATWRKR', 'FEDWRKR','BLACK', 'BLUCLLR', 'ENROLL', 'FARMER', 'FORBORN', 'GVTWRKR', 'MANUF', 'RURLFARM', 'MILTPOP', 'TRANSPRT', 'UNEMPLYD',
                             'URBAN', 'WHLRETL', 'AGE65', 'CVLLBFRC']
 to_normalize = ['VABEDS', 'BANK', 'FLOOD', 'MILTMAJR', 'MILTINST', 'PORT']
 
-standardize_second = ['BLUCLLR', 'ENROLL', 'GVTWRKR', 'MANUF', 'TRANSPRT', 'URBAN', 'AGE65', 'WHLRETL', 'CVLLBFRC']
-normalize_second = ['BLACK', 'FARMER', 'FORBORN', 'RURLFARM', 'MILTPOP', 'UNEMPLYD', 'INTRLAND']
+standardize_second = ['STATWRKR', 'BLUCLLR', 'ENROLL', 'GVTWRKR', 'MANUF', 'TRANSPRT', 'URBAN', 'AGE65', 'WHLRETL', 'CVLLBFRC']
+normalize_second = ['FEDWRKR', 'VETERANS','BLACK', 'FARMER', 'FORBORN', 'RURLFARM', 'MILTPOP', 'UNEMPLYD', 'INTRLAND']
 # data = data.drop(['NUCPLANT'], axis=1)
 min_max_scaler = preprocessing.MinMaxScaler()
 standard_scaler = preprocessing.StandardScaler()
