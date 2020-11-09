@@ -1,0 +1,197 @@
+ACEREGIO               False
+AGE65                  False
+BANK                   False
+BLACK                  False
+BLUCLLR                False
+CITY                   False
+COAST                  False
+CONSTRCT               False
+CVLLBFRC               False
+DC                     False
+ENROLL                 False
+FARMER                 False
+FEDWRKR                False
+FINANCE                False
+FIPSTATE               False
+FLOOD                  False
+FORBORN                False
+GVTWRKR                False
+INTRLAND               False
+LANDSQMI               False
+LOCLWRKR               False
+MANUF                  False
+MARINE                 False
+MDNINCM                False
+MILTINST               False
+MILTMAJR               False
+MILTPOP                False
+NUCPLANT               False
+POPSQMI                False
+POPULATN               False
+PORT                   False
+RURLFARM               False
+STATWRKR               False
+TRANSPRT               False
+UNEMPLYD               False
+UNION                  False
+URBAN                  False
+VABEDS                 False
+VETERANS               False
+WHLRETL                False
+candidatevotes         False
+totalvotes             False
+winratio               False
+prev_party             False
+prev_candidatevotes    False
+prev_totalvotes        False
+prev_winratio          False
+flip                   False
+dtype: bool
+896     0.0
+1350    0.0
+2453    0.0
+1792    1.0
+1307    0.0
+       ... 
+87      0.0
+863     0.0
+438     0.0
+437     0.0
+2057    0.0
+Name: flip, Length: 2007, dtype: float64
+No Sampling: Label = flip: 172
+No Sampling: Label = not flip: 1835
+SMOTE Oversampling: Label = flip: 1835
+SMOTE Oversampling: Label = not flip: 1835
+SMOTE Undersampling: Label = flip: 172
+SMOTE Undersampling: Label = not flip: 172
+NO OVERSAMPLING
+Accuracy:
+- KNN: 0.9362549800796812
+- ID3 (underfitting): 0.9342629482071713
+- ID3: 0.8904382470119522
+- ID3 (overfitting): 0.8864541832669323
+- CART: 0.8784860557768924
+- Naive Bayes: 0.09163346613545817
+- RBF Kernel SVC: 0.9402390438247012
+- Random Forest: 0.9342629482071713
+- AdaBoost: 0.900398406374502
+- MLP: 0.4601593625498008
+Confusion Matrices:
+- KNN:
+ [[470   2]
+ [ 30   0]]
+- ID3 (underfitting):
+ [[468   4]
+ [ 29   1]]
+- ID3:
+ [[440  32]
+ [ 23   7]]
+- ID3 (overfitting):
+ [[436  36]
+ [ 21   9]]
+- CART:
+ [[434  38]
+ [ 23   7]]
+- Naive Bayes:
+ [[ 17 455]
+ [  1  29]]
+- RBF Kernel SVC:
+ [[472   0]
+ [ 30   0]]
+- Random Forest:
+ [[469   3]
+ [ 30   0]]
+- AdaBoost:
+ [[449  23]
+ [ 27   3]]
+- MLP:
+ [[219 253]
+ [ 18  12]]
+OVERSAMPLING
+Accuracy:
+- KNN: 0.6653386454183267
+- ID3 (underfitting): 0.7390438247011952
+- ID3: 0.850597609561753
+- ID3 (overfitting): 0.850597609561753
+- CART: 0.852589641434263
+- Naive Bayes: 0.08167330677290836
+- RBF Kernel SVC: 0.05976095617529881
+- Random Forest: 0.9083665338645418
+- AdaBoost: 0.8944223107569721
+- MLP: 0.36254980079681276
+Confusion Matrices:
+- KNN:
+ [[324 148]
+ [ 20  10]]
+- ID3 (underfitting):
+ [[348 124]
+ [  7  23]]
+- ID3:
+ [[416  56]
+ [ 19  11]]
+- ID3 (overfitting):
+ [[415  57]
+ [ 18  12]]
+- CART:
+ [[416  56]
+ [ 18  12]]
+- Naive Bayes:
+ [[ 12 460]
+ [  1  29]]
+- RBF Kernel SVC:
+ [[  0 472]
+ [  0  30]]
+- Random Forest:
+ [[449  23]
+ [ 23   7]]
+- AdaBoost:
+ [[442  30]
+ [ 23   7]]
+- MLP:
+ [[158 314]
+ [  6  24]]
+UNDERSAMPLING
+Accuracy:
+- KNN: 0.2848605577689243
+- ID3 (underfitting): 0.3745019920318725
+- ID3: 0.46613545816733065
+- ID3 (overfitting): 0.4581673306772908
+- CART: 0.4800796812749004
+- Naive Bayes: 0.5239043824701195
+- RBF Kernel SVC: 0.5039840637450199
+- Random Forest: 0.42231075697211157
+- AdaBoost: 0.45617529880478086
+- MLP: 0.061752988047808766
+Confusion Matrices:
+- KNN:
+ [[119 353]
+ [  6  24]]
+- ID3 (underfitting):
+ [[162 310]
+ [  4  26]]
+- ID3:
+ [[212 260]
+ [  8  22]]
+- ID3 (overfitting):
+ [[206 266]
+ [  6  24]]
+- CART:
+ [[215 257]
+ [  4  26]]
+- Naive Bayes:
+ [[241 231]
+ [  8  22]]
+- RBF Kernel SVC:
+ [[233 239]
+ [ 10  20]]
+- Random Forest:
+ [[189 283]
+ [  7  23]]
+- AdaBoost:
+ [[203 269]
+ [  4  26]]
+- MLP:
+ [[  1 471]
+ [  0  30]]
+
