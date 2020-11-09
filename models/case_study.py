@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import csv
+import sys
 from datetime import datetime
 import pandas as pd
 import numpy as np
@@ -19,7 +20,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import NearMiss
 
-df = pd.read_csv("../data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
+test_data = pd.read_csv("data/flipped_data/1978_testing.csv", engine="python")
+train_data = pd.read_csv("data/flipped_data/1980_1998_training.csv", engine="python")
 
 ### CHANGE THIS WITH NEW DATA
 # some (heavy) preprocessing
@@ -30,20 +32,26 @@ df = pd.read_csv("../data/flipped_data/scaled_merged_features_and_flipped_labels
 #               'MANUF', 'WHLRETL', 'VETERANS', 'VABEDS', 'TRANSPRT'], 1)
 # print(df['PARTY'])
 
-df = df.drop(['party', 'ID', 'STATE', 'SC', 'CD'], 1)
-df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS']] = df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS']].fillna(0)
+test_data = test_data.drop(['party', 'ID', 'STATE', 'SC', 'CD'], 1)
+train_data = train_data.drop(['party', 'ID', 'STATE', 'SC', 'CD'], 1)
+test_data[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS']] = test_data[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS']].fillna(0)
+train_data[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT']] = train_data[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT']].fillna(0)
 
 # df = df[df['prev_party'].isna() & df['prev_candidatevotes'].isna() & df['prev_totalvotes'].isna() & df['prev_winratio'].isna() & df['flip'].isna()]
-df = df[df['prev_party'].notna()]
+test_data = test_data[test_data['prev_party'].notna()]
+train_data = train_data[train_data['prev_party'].notna()]
 
-print(df.isna().any())
 # feature/label split
-y = df['flip']
-x = df.drop(['flip'], 1)
+Y_train = train_data['flip']
+X_train = train_data.drop(['flip'], 1)
+
+Y_test = test_data['flip']
+X_test = test_data.drop(['flip'], 1)
+print(Y_test)
+
 
 # test/train split
-X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.2)
-print(Y_train)
+#X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.2)
 print("No Sampling: Label = flip:", sum(Y_train == 1))
 print("No Sampling: Label = not flip:", sum(Y_train == 0))
 
@@ -105,7 +113,7 @@ for _ in range(1):
     clf_cart = tree.DecisionTreeClassifier(max_depth=18)
     clf_bayes = GaussianNB()
     clf_rbf = SVC()
-    clf_forest = RandomForestClassifier(n_estimators=15)
+    clf_forest = RandomForestClassifier()
     clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=8), random_state=21)
     clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
