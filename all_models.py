@@ -33,6 +33,7 @@ x = df.drop(['PARTY'], 1)
 # print(x.corr(method="pearson").to_string())
 # print(np.where(pd.isnull(df)))
 accuracy = [ [] for _ in range(10) ]
+cm = [ [[0,0],[0,0]] for _ in range(10) ]
 for _ in range(1):
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
     # print(X_train.columns[3])
@@ -98,6 +99,12 @@ for _ in range(1):
     accuracy[7].append(metrics.accuracy_score(y_test, clf_forest.predict(X_test)))
     accuracy[8].append(metrics.accuracy_score(y_test, clf_boost.predict(X_test)))
     accuracy[9].append(metrics.accuracy_score(y_test, clf_mlp.predict(X_test)))
+
+    cm[3][0][0] += metrics.confusion_matrix(y_test, clf_id3_overfit.predict(X_test) )[0][0]
+    cm[3][0][1] += metrics.confusion_matrix(y_test, clf_id3_overfit.predict(X_test) )[0][-1]
+    cm[3][1][0] += metrics.confusion_matrix(y_test, clf_id3_overfit.predict(X_test) )[-1][0]
+    cm[3][1][1] += metrics.confusion_matrix(y_test, clf_id3_overfit.predict(X_test) )[-1][-1]
+    print(cm)
 
     '''clf_id3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=d)
     clf_cart = tree.DecisionTreeClassifier(max_depth=d)
