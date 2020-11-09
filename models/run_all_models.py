@@ -105,7 +105,7 @@ for _ in range(1):
     clf_cart = tree.DecisionTreeClassifier(max_depth=18)
     clf_bayes = GaussianNB()
     clf_rbf = SVC()
-    clf_forest = RandomForestClassifier()
+    clf_forest = RandomForestClassifier(n_estimators=15)
     clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=8), random_state=21)
     clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
