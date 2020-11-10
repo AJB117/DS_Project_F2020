@@ -16,8 +16,9 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import NearMiss
+import statistics
 
-df = pd.read_csv("../data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
+df = pd.read_csv("./data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
 
 ### CHANGE THIS WITH NEW DATA
 # some (heavy) preprocessing
@@ -39,7 +40,7 @@ print(df.isna().any())
 y = df['flip']
 x = df.drop(['flip'], 1)
 
-num_trials = 100
+num_trials = 10
 results = {}
 samplings = [ "STANDARD", "UNDER", "OVER"]
 models = [ "KNN", "ID3 (Underfitting)", "ID3", "ID3 (Overfitting)",
@@ -56,6 +57,18 @@ for sampling in samplings:
 # print(results)
 now = datetime.now()
 
+
+# Initialize
+clf_knn = KNeighborsClassifier()
+clf_id3_underfit = tree.DecisionTreeClassifier(criterion="entropy", max_depth=2)
+clf_id3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=8)
+clf_id3_overfit = tree.DecisionTreeClassifier(criterion="entropy")
+clf_cart = tree.DecisionTreeClassifier(max_depth=18)
+clf_bayes = GaussianNB()
+clf_rbf = SVC()
+clf_forest = RandomForestClassifier(n_estimators=15, max_depth=12)
+clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=8), random_state=21)
+clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
 # loops once for each trial
 for trial in range(num_trials):
@@ -79,18 +92,6 @@ for trial in range(num_trials):
         print(Y_train)
         print("No Sampling: Label = flip:", sum(Y_train == 1))
         print("No Sampling: Label = not flip:", sum(Y_train == 0))
-
-        # Initialize
-        clf_knn = KNeighborsClassifier()
-        clf_id3_underfit = tree.DecisionTreeClassifier(criterion="entropy", max_depth=2)
-        clf_id3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=18)
-        clf_id3_overfit = tree.DecisionTreeClassifier(criterion="entropy")
-        clf_cart = tree.DecisionTreeClassifier(max_depth=18)
-        clf_bayes = GaussianNB()
-        clf_rbf = SVC()
-        clf_forest = RandomForestClassifier()
-        clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=2), random_state=21)
-        clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
         
         # Sample and train
         if sampling == "STANDARD":
@@ -202,20 +203,19 @@ for trial in range(num_trials):
     new_now = datetime.now()
     elapsed = new_now - now
     print(f'trial {trial} ran in {elapsed} time')
-        
-        
+    now = new_now
 
 # flatten results to a 2D array
-data = [ ["Sampling", "Model", "Metric"] + [f'Trial {i}' for i in range(num_trials)] ]
+data = [ ["Sampling", "Model", "Metric", "Average", "Standard Deviation"] + [f'Trial {i}' for i in range(num_trials)] ]
 for sampling, sampling_dict in results.items():
     for model, model_dict in sampling_dict.items():
         for metric, trial_results in model_dict.items():
-            data.append([sampling, model, metric] + trial_results)
+            data.append([sampling, model, metric, statistics.mean(trial_results), statistics.stdev(trial_results)] + trial_results)
 
 # datetime object containing current date and time
 now = datetime.now()
 dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
 
-with open(f'../output/output-{dt_string}.csv',"w+") as my_csv:
+with open(f'./output/output-{dt_string}.csv',"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=',')
     csvWriter.writerows(data)

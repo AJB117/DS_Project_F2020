@@ -33,6 +33,9 @@ clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_de
 clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
 # test/train split
+y = df['flip']
+x = df.drop(['flip'], 1)
+
 X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.2)
 print(Y_train)
 print("No Sampling: Label = flip:", sum(Y_train == 1))
