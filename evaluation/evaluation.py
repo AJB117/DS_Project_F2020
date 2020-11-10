@@ -29,7 +29,7 @@ def get_results(i, append):
         name = lines[i][2:-2]
         name += append
         # get matrix
-        matrix1 = [int(lines[i+1][3:-2].split()[0]), int(lines[i+1][3:-2].split()[1])]
+        matrix1 = [int(lines[i+1][4:-2].split()[0]), int(lines[i+1][3:-2].split()[1])]
         matrix2 = [int(lines[i+2][3:-3].split()[0]), int(lines[i+2][3:-3].split()[1])]
         matrix = [matrix1, matrix2]
         m = Model(name, matrix)
@@ -38,9 +38,10 @@ def get_results(i, append):
         # next
         i += 3
 
-output = open('run_1_output.txt', 'r')
+output = open('modelperformance.md', 'r')
 lines = output.readlines()
 
-get_results(81-1, '-STANDARDSAMPLING')
-get_results(124-1, '-OVERSAMPLING')
-get_results(167-1, '-UNDERSAMPLING')
+# line numbers passed here should be the line number of the first model name (0-indexed)
+get_results(15-1, '-STANDARDSAMPLING')
+get_results(62-1, '-OVERSAMPLING')
+get_results(110-1, '-UNDERSAMPLING')
