@@ -202,8 +202,16 @@ for trial in range(num_trials):
             results[sampling][model][metric].append(2*results[sampling][model]["precision"][-1]*results[sampling][model]["recall"][-1] / (results[sampling][model]["precision"][-1]+results[sampling][model]["recall"][-1]))
         
         metric = "auc"
-        for model in models:
-            results[sampling][model][metric].append(metrics.roc_auc_score(Y_test, model.predict(X_test)))
+        results[sampling]["KNN"][metric].append(metrics.roc_auc_score(Y_test, clf_knn.predict(X_test)))
+        results[sampling]["ID3 (Underfitting)"][metric].append(metrics.roc_auc_score(Y_test, clf_id3_underfit.predict(X_test)))
+        results[sampling]["ID3"][metric].append(metrics.roc_auc_score(Y_test, clf_id3.predict(X_test)))
+        results[sampling]["ID3 (Overfitting)"][metric].append(metrics.roc_auc_score(Y_test, clf_id3_overfit.predict(X_test)))
+        results[sampling]["CART"][metric].append(metrics.roc_auc_score(Y_test, clf_cart.predict(X_test)))
+        results[sampling]["Naive Bayes"][metric].append(metrics.roc_auc_score(Y_test, clf_bayes.predict(X_test)))
+        results[sampling]["RBF Kernel SVC"][metric].append(metrics.roc_auc_score(Y_test, clf_rbf.predict(X_test)))
+        results[sampling]["Random Forest"][metric].append(metrics.roc_auc_score(Y_test, clf_forest.predict(X_test)))
+        results[sampling]["AdaBoost"][metric].append(metrics.roc_auc_score(Y_test, clf_boost.predict(X_test)))
+        results[sampling]["MLP"][metric].append(metrics.roc_auc_score(Y_test, clf_mlp.predict(X_test)))
 
     new_now = datetime.now()
     elapsed = new_now - now
