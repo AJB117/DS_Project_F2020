@@ -223,6 +223,8 @@ data = [ ["Sampling", "Model", "Metric", "Average", "Standard Deviation"] + [f'T
 for sampling, sampling_dict in results.items():
     for model, model_dict in sampling_dict.items():
         for metric, trial_results in model_dict.items():
+            if metric in ["TP", "FN", "FP", "TN"]:
+              continue
             data.append([sampling, model, metric, statistics.mean(trial_results), statistics.stdev(trial_results)] + trial_results)
 
 # datetime object containing current date and time
