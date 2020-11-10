@@ -39,25 +39,7 @@ print(df.isna().any())
 y = df['flip']
 x = df.drop(['flip'], 1)
 
-# test/train split
-X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.2)
-print(Y_train)
-print("No Sampling: Label = flip:", sum(Y_train == 1))
-print("No Sampling: Label = not flip:", sum(Y_train == 0))
-
-# initialize SMOTE oversampling algorithm; oversamples all rows with label not in majority
-sm = SMOTE(random_state=2)
-X_train_OS, Y_train_OS = sm.fit_sample(X_train, Y_train)
-print("SMOTE Oversampling: Label = flip:", sum(Y_train_OS == 1))
-print("SMOTE Oversampling: Label = not flip:", sum(Y_train_OS == 0))
-
-# initialize near miss undersampling algorithm
-nm = NearMiss()
-X_train_US, Y_train_US = nm.fit_sample(X_train, Y_train)
-print("SMOTE Undersampling: Label = flip:", sum(Y_train_US == 1))
-print("SMOTE Undersampling: Label = not flip:", sum(Y_train_US == 0))
-
-num_trials = 10
+num_trials = 100
 results = {}
 samplings = [ "STANDARD", "UNDER", "OVER"]
 models = [ "KNN", "ID3 (Underfitting)", "ID3", "ID3 (Overfitting)",
@@ -72,9 +54,10 @@ for sampling in samplings:
         for metric in all_metrics:
             results[sampling][model].update({metric: [] })
 # print(results)
+now = datetime.now()
 
 
-# only loops once
+# loops once for each trial
 for trial in range(num_trials):
     # Print
     for sampling in samplings:
@@ -90,6 +73,12 @@ for trial in range(num_trials):
 
         # print(np.where(x.applymap(lambda x: x == '')))
         print(f'TRIAL {trial}')
+
+        # test/train split
+        X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.2)
+        print(Y_train)
+        print("No Sampling: Label = flip:", sum(Y_train == 1))
+        print("No Sampling: Label = not flip:", sum(Y_train == 0))
 
         # Initialize
         clf_knn = KNeighborsClassifier()
@@ -118,20 +107,13 @@ for trial in range(num_trials):
             clf_boost.fit(X_train, Y_train)
             clf_mlp.fit(X_train, Y_train)            
         elif sampling == "UNDER":
-            print(' OVERSAMPLING')
-            # model train and test
-            clf_knn.fit(X_train_OS, Y_train_OS)
-            clf_id3_underfit.fit(X_train_OS, Y_train_OS)
-            clf_id3.fit(X_train_OS, Y_train_OS)
-            clf_id3_overfit.fit(X_train_OS, Y_train_OS)
-            clf_cart.fit(X_train_OS, Y_train_OS)
-            clf_bayes.fit(X_train_OS, Y_train_OS)
-            clf_rbf.fit(X_train_OS, Y_train_OS)
-            clf_forest.fit(X_train_OS, Y_train_OS)
-            clf_boost.fit(X_train_OS, Y_train_OS)
-            clf_mlp.fit(X_train_OS, Y_train_OS)
-        elif sampling == "OVER":
             print(' UNDERSAMPLING')
+            # initialize near miss undersampling algorithm
+            nm = NearMiss()
+            X_train_US, Y_train_US = nm.fit_sample(X_train, Y_train)
+            print("SMOTE Undersampling: Label = flip:", sum(Y_train_US == 1))
+            print("SMOTE Undersampling: Label = not flip:", sum(Y_train_US == 0))
+
             # model train and test
             clf_knn.fit(X_train_US, Y_train_US)
             clf_id3_underfit.fit(X_train_US, Y_train_US)
@@ -143,8 +125,29 @@ for trial in range(num_trials):
             clf_forest.fit(X_train_US, Y_train_US)
             clf_boost.fit(X_train_US, Y_train_US)
             clf_mlp.fit(X_train_US, Y_train_US)
+        elif sampling == "OVER":
+            print(' OVERSAMPLING')
+            # initialize SMOTE oversampling algorithm; oversamples all rows with label not in majority
+            sm = SMOTE(random_state=2)
+            X_train_OS, Y_train_OS = sm.fit_sample(X_train, Y_train)
+            print("SMOTE Oversampling: Label = flip:", sum(Y_train_OS == 1))
+            print("SMOTE Oversampling: Label = not flip:", sum(Y_train_OS == 0))
+
+            # model train and test
+            clf_knn.fit(X_train_OS, Y_train_OS)
+            clf_id3_underfit.fit(X_train_OS, Y_train_OS)
+            clf_id3.fit(X_train_OS, Y_train_OS)
+            clf_id3_overfit.fit(X_train_OS, Y_train_OS)
+            clf_cart.fit(X_train_OS, Y_train_OS)
+            clf_bayes.fit(X_train_OS, Y_train_OS)
+            clf_rbf.fit(X_train_OS, Y_train_OS)
+            clf_forest.fit(X_train_OS, Y_train_OS)
+            clf_boost.fit(X_train_OS, Y_train_OS)
+            clf_mlp.fit(X_train_OS, Y_train_OS)
         else:
             print(f'ERROR, FOUND NO MATCH FOR {sampling}')
+
+            
 
         # Test
         metric = "accuracy"
@@ -195,96 +198,12 @@ for trial in range(num_trials):
         metric = "f1"
         for model in models:
             results[sampling][model][metric].append(2*results[sampling][model]["precision"][-1]*results[sampling][model]["recall"][-1] / (results[sampling][model]["precision"][-1]+results[sampling][model]["recall"][-1]))
-
-        '''print('OVERSAMPLING')
-        # model train and test
-        clf_knn.fit(X_train_OS, Y_train_OS)
-        clf_id3_underfit.fit(X_train_OS, Y_train_OS)
-        clf_id3.fit(X_train_OS, Y_train_OS)
-        clf_id3_overfit.fit(X_train_OS, Y_train_OS)
-        clf_cart.fit(X_train_OS, Y_train_OS)
-        clf_bayes.fit(X_train_OS, Y_train_OS)
-        clf_rbf.fit(X_train_OS, Y_train_OS)
-        clf_forest.fit(X_train_OS, Y_train_OS)
-        clf_boost.fit(X_train_OS, Y_train_OS)
-        clf_mlp.fit(X_train_OS, Y_train_OS)
-
-        print("Accuracy:")
-        print("- KNN:", metrics.accuracy_score(Y_test, clf_knn.predict(X_test)))
-        print("- ID3 (underfitting):", metrics.accuracy_score(Y_test, clf_id3_underfit.predict(X_test)))
-        print("- ID3:", metrics.accuracy_score(Y_test, clf_id3.predict(X_test)))
-        print("- ID3 (overfitting):", metrics.accuracy_score(Y_test, clf_id3_overfit.predict(X_test)))
-        print("- CART:", metrics.accuracy_score(Y_test, clf_cart.predict(X_test)))
-        print("- Naive Bayes:", metrics.accuracy_score(Y_test, clf_bayes.predict(X_test)))
-        print("- RBF Kernel SVC:", metrics.accuracy_score(Y_test, clf_rbf.predict(X_test)))
-        print("- Random Forest:", metrics.accuracy_score(Y_test, clf_forest.predict(X_test)))
-        print("- AdaBoost:", metrics.accuracy_score(Y_test, clf_boost.predict(X_test)))
-        print("- MLP:", metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
-
-        print("Confusion Matrices:")
-        print("- KNN:\n", metrics.confusion_matrix(Y_test, clf_knn.predict(X_test)))
-        print("- ID3 (underfitting):\n", metrics.confusion_matrix(Y_test, clf_id3_underfit.predict(X_test)))
-        print("- ID3:\n", metrics.confusion_matrix(Y_test, clf_id3.predict(X_test)))
-        print("- ID3 (overfitting):\n", metrics.confusion_matrix(Y_test, clf_id3_overfit.predict(X_test)))
-        print("- CART:\n", metrics.confusion_matrix(Y_test, clf_cart.predict(X_test)))
-        print("- Naive Bayes:\n", metrics.confusion_matrix(Y_test, clf_bayes.predict(X_test)))
-        print("- RBF Kernel SVC:\n", metrics.confusion_matrix(Y_test, clf_rbf.predict(X_test)))
-        print("- Random Forest:\n", metrics.confusion_matrix(Y_test, clf_forest.predict(X_test)))
-        print("- AdaBoost:\n", metrics.confusion_matrix(Y_test, clf_boost.predict(X_test)))
-        print("- MLP:\n", metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test)))
-
-
-        print('UNDERSAMPLING')
-        # model train and test
-        clf_knn.fit(X_train_US, Y_train_US)
-        clf_id3_underfit.fit(X_train_US, Y_train_US)
-        clf_id3.fit(X_train_US, Y_train_US)
-        clf_id3_overfit.fit(X_train_US, Y_train_US)
-        clf_cart.fit(X_train_US, Y_train_US)
-        clf_bayes.fit(X_train_US, Y_train_US)
-        clf_rbf.fit(X_train_US, Y_train_US)
-        clf_forest.fit(X_train_US, Y_train_US)
-        clf_boost.fit(X_train_US, Y_train_US)
-        clf_mlp.fit(X_train_US, Y_train_US)
-
-        print("Accuracy:")
-        print("- KNN:", metrics.accuracy_score(Y_test, clf_knn.predict(X_test)))
-        print("- ID3 (underfitting):", metrics.accuracy_score(Y_test, clf_id3_underfit.predict(X_test)))
-        print("- ID3:", metrics.accuracy_score(Y_test, clf_id3.predict(X_test)))
-        print("- ID3 (overfitting):", metrics.accuracy_score(Y_test, clf_id3_overfit.predict(X_test)))
-        print("- CART:", metrics.accuracy_score(Y_test, clf_cart.predict(X_test)))
-        print("- Naive Bayes:", metrics.accuracy_score(Y_test, clf_bayes.predict(X_test)))
-        print("- RBF Kernel SVC:", metrics.accuracy_score(Y_test, clf_rbf.predict(X_test)))
-        print("- Random Forest:", metrics.accuracy_score(Y_test, clf_forest.predict(X_test)))
-        print("- AdaBoost:", metrics.accuracy_score(Y_test, clf_boost.predict(X_test)))
-        print("- MLP:", metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
-
-        print("Confusion Matrices:")
-        print("- KNN:\n", metrics.confusion_matrix(Y_test, clf_knn.predict(X_test)))
-        print("- ID3 (underfitting):\n", metrics.confusion_matrix(Y_test, clf_id3_underfit.predict(X_test)))
-        print("- ID3:\n", metrics.confusion_matrix(Y_test, clf_id3.predict(X_test)))
-        print("- ID3 (overfitting):\n", metrics.confusion_matrix(Y_test, clf_id3_overfit.predict(X_test)))
-        print("- CART:\n", metrics.confusion_matrix(Y_test, clf_cart.predict(X_test)))
-        print("- Naive Bayes:\n", metrics.confusion_matrix(Y_test, clf_bayes.predict(X_test)))
-        print("- RBF Kernel SVC:\n", metrics.confusion_matrix(Y_test, clf_rbf.predict(X_test)))
-        print("- Random Forest:\n", metrics.confusion_matrix(Y_test, clf_forest.predict(X_test)))
-        print("- AdaBoost:\n", metrics.confusion_matrix(Y_test, clf_boost.predict(X_test)))
-        print("- MLP:\n", metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test)))'''
-
-        '''clf_id3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=d)
-        clf_cart = tree.DecisionTreeClassifier(max_depth=d)
-
-        clf_id3.fit(X_train, Y_train)
-        clf_cart.fit(X_train, Y_train)
-
         
-        accuracy[0].append(d)
-
-        print(f'- ID3: max_depth={d}', metrics.accuracy_score(Y_test, clf_id3.predict(X_test)))
-        accuracy[1].append(metrics.accuracy_score(Y_test, clf_id3.predict(X_test)))
-
-        print(f'- CART: max_depth={d}', metrics.accuracy_score(Y_test, clf_cart.predict(X_test)))
-        accuracy[2].append(metrics.accuracy_score(Y_test, clf_cart.predict(X_test)))'''
+    new_now = datetime.now()
+    elapsed = new_now - now
+    print(f'trial {trial} ran in {elapsed} time')
+        
+        
 
 # flatten results to a 2D array
 data = [ ["Sampling", "Model", "Metric"] + [f'Trial {i}' for i in range(num_trials)] ]
