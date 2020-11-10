@@ -42,10 +42,11 @@ x = df.drop(['flip'], 1)
 
 num_trials = 10
 results = {}
-samplings = [ "STANDARD", "UNDER", "OVER"]
+# samplings = [ "STANDARD", "UNDER", "OVER"]
+samplings = ["OVER"]
 models = [ "KNN", "ID3 (Underfitting)", "ID3", "ID3 (Overfitting)",
         "CART", "Naive Bayes", "RBF Kernel SVC", "Random Forest", "AdaBoost", "MLP" ]
-all_metrics = ["accuracy", "TP", "FN", "FP", "TN", "precision", "recall", "f1"]
+all_metrics = ["accuracy", "TP", "FN", "FP", "TN", "precision", "recall", "f1", "auc"]
 # test_dict = { models[0]: {all_metrics[0]: [] } }
 # print(test_dict)
 for sampling in samplings:
@@ -61,13 +62,13 @@ now = datetime.now()
 # Initialize
 clf_knn = KNeighborsClassifier()
 clf_id3_underfit = tree.DecisionTreeClassifier(criterion="entropy", max_depth=2)
-clf_id3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=8)
+clf_id3 = tree.DecisionTreeClassifier(criterion="entropy")
 clf_id3_overfit = tree.DecisionTreeClassifier(criterion="entropy")
 clf_cart = tree.DecisionTreeClassifier(max_depth=18)
 clf_bayes = GaussianNB()
 clf_rbf = SVC()
-clf_forest = RandomForestClassifier(n_estimators=15, max_depth=12)
-clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=8), random_state=21)
+clf_forest = RandomForestClassifier()
+clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(), random_state=21)
 clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
 # loops once for each trial
@@ -179,10 +180,10 @@ for trial in range(num_trials):
                 results[sampling]["AdaBoost"][metric].append(metrics.confusion_matrix(Y_test, clf_boost.predict(X_test))[i][j])
                 results[sampling]["MLP"][metric].append(metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test))[i][j])
 
-        for sample_key, sampling_dict in results.items():
-            for model_key, model_dict in sampling_dict.items():
-                for metric_key, trial_results in model_dict.items():
-                    print(f'{sample_key} {model_key} {metric_key}: {trial_results}')
+        # for sample_key, sampling_dict in results.items():
+        #     for model_key, model_dict in sampling_dict.items():
+        #         for metric_key, trial_results in model_dict.items():
+        #             print(f'{sample_key} {model_key} {metric_key}: {trial_results}')
         
         metric = "precision"
         for model in models:
@@ -200,6 +201,10 @@ for trial in range(num_trials):
         for model in models:
             results[sampling][model][metric].append(2*results[sampling][model]["precision"][-1]*results[sampling][model]["recall"][-1] / (results[sampling][model]["precision"][-1]+results[sampling][model]["recall"][-1]))
         
+        metric = "auc"
+        for model in models:
+            results[sampling][model][metric].append(metrics.roc_auc_score(Y_test, model.predict(X_test)))
+
     new_now = datetime.now()
     elapsed = new_now - now
     print(f'trial {trial} ran in {elapsed} time')

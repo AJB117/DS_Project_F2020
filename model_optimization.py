@@ -21,9 +21,9 @@ import operator
 
 # optimizing adaboost
 
-df = pd.read_csv("data/flipped_label_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
+df = pd.read_csv("./data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
 df = df.drop(['party', 'ID', 'STATE', 'SC', 'CD'], 1)
-df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS']] = df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS']].fillna(0)
+df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT']] = df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT']].fillna(0)
 df = df[df['prev_party'].notna()]
 
 y = df['flip']
@@ -57,9 +57,9 @@ def testing_random_forest():
   accuracies_test = []
   auc_test = []
   for max_d in range(1, 101):
-      clf_forest = RandomForestClassifier(max_depth=max_d)
-      clf_forest.fit(X_train, Y_train)
-      print(f"{max_d} max_depth")
+      clf_forest = AdaBoostClassifier(tree.DecisionTreeClassifier(max_depth=8), n_estimators=max_d)
+      clf_forest.fit(X_train_OS, Y_train_OS)
+      print(f"{max_d} n_estimators")
       accuracy = metrics.accuracy_score(Y_test, clf_forest.predict(X_test))
       print(f"\tAccuracy: {accuracy}")
       accuracies_test.append(accuracy)
@@ -67,13 +67,13 @@ def testing_random_forest():
       max_depths.append(max_d)
 
   plt.plot(max_depths, accuracies_test)
-  plt.title("max_depth vs Test Accuracy")
-  plt.xlabel('max_depth')
+  plt.title("n_estimators vs Test Accuracy")
+  plt.xlabel('n_estimators')
   plt.ylabel('Test Accuracy')
   plt.show()
-  plt.title("max_depth vs Test AUC")
+  plt.title("n_estimators vs Test AUC")
   plt.plot(max_depths, auc_test)
-  plt.xlabel('max_depth')
+  plt.xlabel('n_estimators')
   plt.ylabel('Test AUC')
   plt.show()
 

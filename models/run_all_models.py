@@ -119,7 +119,7 @@ for _ in range(1):
     clf_rbf.fit(X_train, Y_train)
     clf_forest.fit(X_train, Y_train)
     clf_boost.fit(X_train, Y_train)
-    clf_mlp.fit(X_train, Y_train)
+    # clf_mlp.fit(X_train, Y_train)
 
     print("Accuracy:")
     print("- KNN:", metrics.accuracy_score(Y_test, clf_knn.predict(X_test)))
@@ -168,7 +168,7 @@ for _ in range(1):
     clf_rbf.fit(X_train_OS, Y_train_OS)
     clf_forest.fit(X_train_OS, Y_train_OS)
     clf_boost.fit(X_train_OS, Y_train_OS)
-    clf_mlp.fit(X_train_OS, Y_train_OS)
+    # clf_mlp.fit(X_train_OS, Y_train_OS)
 
     print("Accuracy:")
     print("- KNN:", metrics.accuracy_score(Y_test, clf_knn.predict(X_test)))
@@ -180,7 +180,7 @@ for _ in range(1):
     print("- RBF Kernel SVC:", metrics.accuracy_score(Y_test, clf_rbf.predict(X_test)))
     print("- Random Forest:", metrics.accuracy_score(Y_test, clf_forest.predict(X_test)))
     print("- AdaBoost:", metrics.accuracy_score(Y_test, clf_boost.predict(X_test)))
-    print("- MLP:", metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
+    # print("- MLP:", metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
 
     print("Confusion Matrices:")
     print("- KNN:\n", metrics.confusion_matrix(Y_test, clf_knn.predict(X_test)))
@@ -192,7 +192,7 @@ for _ in range(1):
     print("- RBF Kernel SVC:\n", metrics.confusion_matrix(Y_test, clf_rbf.predict(X_test)))
     print("- Random Forest:\n", metrics.confusion_matrix(Y_test, clf_forest.predict(X_test)))
     print("- AdaBoost:\n", metrics.confusion_matrix(Y_test, clf_boost.predict(X_test)))
-    print("- MLP:\n", metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test)))
+    # print("- MLP:\n", metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test)))
     
     accuracy[0].append(metrics.accuracy_score(Y_test, clf_knn.predict(X_test)))
     accuracy[1].append(metrics.accuracy_score(Y_test, clf_id3_underfit.predict(X_test)))
@@ -203,7 +203,7 @@ for _ in range(1):
     accuracy[6].append(metrics.accuracy_score(Y_test, clf_rbf.predict(X_test)))
     accuracy[7].append(metrics.accuracy_score(Y_test, clf_forest.predict(X_test)))
     accuracy[8].append(metrics.accuracy_score(Y_test, clf_boost.predict(X_test)))
-    accuracy[9].append(metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
+    # accuracy[9].append(metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
 
 
     print('UNDERSAMPLING')
