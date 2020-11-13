@@ -12,7 +12,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import NearMiss
@@ -30,7 +29,7 @@ num_trials = 10
 results = {}
 samplings = ["OVER"] # add "UNDER" or "STANDARD" for undersampling or no sampling, respectively
 models = [ "KNN", "ID3 (Underfitting)", "ID3", "ID3 (Overfitting)",
-        "CART", "Naive Bayes", "RBF Kernel SVC", "Random Forest", "AdaBoost", "MLP" ]
+        "CART", "Naive Bayes", "RBF Kernel SVC", "Random Forest", "AdaBoost"]
 all_metrics = ["accuracy", "TP", "FN", "FP", "TN", "precision", "recall", "f1", "auc"]
 for sampling in samplings:
     results.update({sampling: {} })
@@ -51,7 +50,6 @@ clf_bayes = GaussianNB()
 clf_rbf = SVC()
 clf_forest = RandomForestClassifier(max_depth=8, n_estimators=9)
 clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=8), n_estimators=45, random_state=21)
-clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
 # loops once for each trial
 for trial in range(num_trials):
@@ -84,7 +82,6 @@ for trial in range(num_trials):
             clf_rbf.fit(X_train, Y_train)
             clf_forest.fit(X_train, Y_train)
             clf_boost.fit(X_train, Y_train)
-            clf_mlp.fit(X_train, Y_train)            
         elif sampling == "UNDER":
             print(' UNDERSAMPLING')
             # initialize near miss undersampling algorithm
@@ -103,7 +100,6 @@ for trial in range(num_trials):
             clf_rbf.fit(X_train_US, Y_train_US)
             clf_forest.fit(X_train_US, Y_train_US)
             clf_boost.fit(X_train_US, Y_train_US)
-            clf_mlp.fit(X_train_US, Y_train_US)
         elif sampling == "OVER":
             print(' OVERSAMPLING')
             # initialize SMOTE oversampling algorithm; oversamples all rows with label not in majority
@@ -122,7 +118,6 @@ for trial in range(num_trials):
             clf_rbf.fit(X_train_OS, Y_train_OS)
             clf_forest.fit(X_train_OS, Y_train_OS)
             clf_boost.fit(X_train_OS, Y_train_OS)
-            clf_mlp.fit(X_train_OS, Y_train_OS)
         else:
             print(f'ERROR, FOUND NO MATCH FOR {sampling}')
 
@@ -139,7 +134,6 @@ for trial in range(num_trials):
         results[sampling]["RBF Kernel SVC"][metric].append(metrics.accuracy_score(Y_test, clf_rbf.predict(X_test)))
         results[sampling]["Random Forest"][metric].append(metrics.accuracy_score(Y_test, clf_forest.predict(X_test)))
         results[sampling]["AdaBoost"][metric].append(metrics.accuracy_score(Y_test, clf_boost.predict(X_test)))
-        results[sampling]["MLP"][metric].append(metrics.accuracy_score(Y_test, clf_mlp.predict(X_test)))
 
         confusion_matrix = [["TP", "FN"],
                             ["FP", "TN"]]
@@ -155,7 +149,6 @@ for trial in range(num_trials):
                 results[sampling]["RBF Kernel SVC"][metric].append(metrics.confusion_matrix(Y_test, clf_rbf.predict(X_test))[i][j])
                 results[sampling]["Random Forest"][metric].append(metrics.confusion_matrix(Y_test, clf_forest.predict(X_test))[i][j])
                 results[sampling]["AdaBoost"][metric].append(metrics.confusion_matrix(Y_test, clf_boost.predict(X_test))[i][j])
-                results[sampling]["MLP"][metric].append(metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test))[i][j])
 
         metric = "precision"
         for model in models:
@@ -183,7 +176,6 @@ for trial in range(num_trials):
         results[sampling]["RBF Kernel SVC"][metric].append(metrics.roc_auc_score(Y_test, clf_rbf.predict(X_test)))
         results[sampling]["Random Forest"][metric].append(metrics.roc_auc_score(Y_test, clf_forest.predict(X_test)))
         results[sampling]["AdaBoost"][metric].append(metrics.roc_auc_score(Y_test, clf_boost.predict(X_test)))
-        results[sampling]["MLP"][metric].append(metrics.roc_auc_score(Y_test, clf_mlp.predict(X_test)))
 
     new_now = datetime.now()
     elapsed = new_now - now
