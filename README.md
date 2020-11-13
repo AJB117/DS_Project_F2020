@@ -60,4 +60,5 @@ All results are saved in the `output` folder and contains each feature paired wi
 
 #### `output`
 This contains all model results output by the scripts in `modeling`. Their names do not match what the scripts wills save new files 
-as since what is currently in `output` are our group's results which the user can verify.
+as since what is currently in `output` are our group's results which the user can verify. `correlations` contains
+the correlation matrix for the features with respect to the flip label.
