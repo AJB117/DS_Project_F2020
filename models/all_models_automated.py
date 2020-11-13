@@ -18,7 +18,7 @@ from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import NearMiss
 import statistics
 
-df = pd.read_csv("./data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
+df = pd.read_csv("../data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
 
 ### CHANGE THIS WITH NEW DATA
 # some (heavy) preprocessing
@@ -62,13 +62,13 @@ now = datetime.now()
 # Initialize
 clf_knn = KNeighborsClassifier()
 clf_id3_underfit = tree.DecisionTreeClassifier(criterion="entropy", max_depth=2)
-clf_id3 = tree.DecisionTreeClassifier(criterion="entropy")
+clf_id3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=8)
 clf_id3_overfit = tree.DecisionTreeClassifier(criterion="entropy")
-clf_cart = tree.DecisionTreeClassifier(max_depth=18)
+clf_cart = tree.DecisionTreeClassifier(max_depth=10)
 clf_bayes = GaussianNB()
 clf_rbf = SVC()
-clf_forest = RandomForestClassifier()
-clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(), random_state=21)
+clf_forest = RandomForestClassifier(max_depth=8, n_estimators=9)
+clf_boost = AdaBoostClassifier(base_estimator=tree.DecisionTreeClassifier(max_depth=8), n_estimators=45, random_state=21)
 clf_mlp = MLPClassifier(hidden_layer_sizes=(50,50,), max_iter=1000, tol=0.001, random_state=42)
 
 # loops once for each trial
@@ -231,6 +231,6 @@ for sampling, sampling_dict in results.items():
 now = datetime.now()
 dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
 
-with open(f'./output/output-{dt_string}.csv',"w+") as my_csv:
+with open(f'../output/output-{dt_string}.csv',"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=',')
     csvWriter.writerows(data)
