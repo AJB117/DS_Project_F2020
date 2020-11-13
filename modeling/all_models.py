@@ -19,21 +19,7 @@ from imblearn.under_sampling import NearMiss
 import statistics
 
 df = pd.read_csv("../data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
-
-### CHANGE THIS WITH NEW DATA
-# some (heavy) preprocessing
-# le = LabelEncoder()
-# df['PARTY'] = le.fit_transform(df['PARTY'].values)
-# df = df.drop(['REDIST', 'ACEREGIO', 'CONSTRUC', 'CVLLBRFR', 'CANDIDATEVOTES', 'TOTALVOTES', 'ID', 'PORT', 'YEAR', 'STATE', 
-#               'PREVID', 'PREVCANDVO', 'PREVTOTVO', 'FIPSTATE', 'SC', 'CD', 'PREVPARTY', 'NUCPLANT', 'POPSQMI', 'MDNINCM',
-#               'MANUF', 'WHLRETL', 'VETERANS', 'VABEDS', 'TRANSPRT'], 1)
-# print(df['PARTY'])
-
 df = df.drop(['party', 'ID', 'STATE', 'SC', 'CD'], 1)
-df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT' ]] = df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT']].fillna(0)
-
-# df = df[df['prev_party'].isna() & df['prev_candidatevotes'].isna() & df['prev_totalvotes'].isna() & df['prev_winratio'].isna() & df['flip'].isna()]
-df = df[df['prev_party'].notna()]
 
 print(df.isna().any())
 # feature/label split
@@ -42,20 +28,16 @@ x = df.drop(['flip'], 1)
 
 num_trials = 10
 results = {}
-# samplings = [ "STANDARD", "UNDER", "OVER"]
-samplings = ["OVER"]
+samplings = ["OVER"] # add "UNDER" or "STANDARD" for undersampling or no sampling, respectively
 models = [ "KNN", "ID3 (Underfitting)", "ID3", "ID3 (Overfitting)",
         "CART", "Naive Bayes", "RBF Kernel SVC", "Random Forest", "AdaBoost", "MLP" ]
 all_metrics = ["accuracy", "TP", "FN", "FP", "TN", "precision", "recall", "f1", "auc"]
-# test_dict = { models[0]: {all_metrics[0]: [] } }
-# print(test_dict)
 for sampling in samplings:
     results.update({sampling: {} })
     for model in models:
         results[sampling].update({model: {} })
         for metric in all_metrics:
             results[sampling][model].update({metric: [] })
-# print(results)
 now = datetime.now()
 
 
@@ -81,11 +63,6 @@ for trial in range(num_trials):
                 for metric_key, trial_results in model_dict.items():
                     print(f'{sample_key} {model_key} {metric_key}: {trial_results}')
 
-        # print(X_train.columns[3])
-
-        # print(X_train)
-
-        # print(np.where(x.applymap(lambda x: x == '')))
         print(f'TRIAL {trial}')
 
         # test/train split
@@ -97,7 +74,7 @@ for trial in range(num_trials):
         # Sample and train
         if sampling == "STANDARD":
             print(" STANDARD SAMPLING")
-             # model train and test
+            # model train and test
             clf_knn.fit(X_train, Y_train)
             clf_id3_underfit.fit(X_train, Y_train)
             clf_id3.fit(X_train, Y_train)
@@ -180,11 +157,6 @@ for trial in range(num_trials):
                 results[sampling]["AdaBoost"][metric].append(metrics.confusion_matrix(Y_test, clf_boost.predict(X_test))[i][j])
                 results[sampling]["MLP"][metric].append(metrics.confusion_matrix(Y_test, clf_mlp.predict(X_test))[i][j])
 
-        # for sample_key, sampling_dict in results.items():
-        #     for model_key, model_dict in sampling_dict.items():
-        #         for metric_key, trial_results in model_dict.items():
-        #             print(f'{sample_key} {model_key} {metric_key}: {trial_results}')
-        
         metric = "precision"
         for model in models:
             print(results[sampling][model]["TP"])
@@ -231,6 +203,6 @@ for sampling, sampling_dict in results.items():
 now = datetime.now()
 dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
 
-with open(f'../output/output-{dt_string}.csv',"w+") as my_csv:
+with open(f'../output/results-output-{dt_string}.csv',"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=',')
     csvWriter.writerows(data)

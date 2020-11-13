@@ -19,23 +19,8 @@ from imblearn.under_sampling import NearMiss
 import statistics
 
 df = pd.read_csv("../data/flipped_data/scaled_merged_features_and_flipped_labels.csv", engine="python")
-
-### CHANGE THIS WITH NEW DATA
-# some (heavy) preprocessing
-# le = LabelEncoder()
-# df['PARTY'] = le.fit_transform(df['PARTY'].values)
-# df = df.drop(['REDIST', 'ACEREGIO', 'CONSTRUC', 'CVLLBRFR', 'CANDIDATEVOTES', 'TOTALVOTES', 'ID', 'PORT', 'YEAR', 'STATE', 
-#               'PREVID', 'PREVCANDVO', 'PREVTOTVO', 'FIPSTATE', 'SC', 'CD', 'PREVPARTY', 'NUCPLANT', 'POPSQMI', 'MDNINCM',
-#               'MANUF', 'WHLRETL', 'VETERANS', 'VABEDS', 'TRANSPRT'], 1)
-# print(df['PARTY'])
-
 df = df.drop(['party', 'ID', 'STATE', 'SC', 'CD'], 1)
-df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT' ]] = df[['CVLLBFRC', 'MANUF', 'MDNINCM', 'PORT', 'VETERANS', 'TRANSPRT']].fillna(0)
 
-# df = df[df['prev_party'].isna() & df['prev_candidatevotes'].isna() & df['prev_totalvotes'].isna() & df['prev_winratio'].isna() & df['flip'].isna()]
-df = df[df['prev_party'].notna()]
-
-print(df.isna().any())
 # feature/label split
 y = df['flip']
 x = df.drop(['flip'], 1)
@@ -124,6 +109,6 @@ for feature in features:
 now = datetime.now()
 dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
 
-with open(f'../output/feature_interpretation/output-{dt_string}.csv',"w+") as my_csv:
+with open(f'../output/feature_interpretation/interpretation-output-{dt_string}.csv',"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=',')
     csvWriter.writerows(data)
